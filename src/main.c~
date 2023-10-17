@@ -1,9 +1,9 @@
 #ifdef _POSIX_C_SOURCE
-#    undef _POSIX_C_SOURCE
+#undef _POSIX_C_SOURCE
 #endif
 
 #ifdef _XOPEN_SOURCE
-#    undef _XOPEN_SOURCE
+#undef _XOPEN_SOURCE
 #endif
 
 #define _POSIX_C_SOURCE 200819L
@@ -41,7 +41,7 @@ static const int verse_limits[] = {
     8, 8, 19, 5, 8, 8, 11, 11, 8, 3, 9, 5, 4, 7, 3, 6, 3, 5, 4, 5, 6
 };
 
-static inline int check_args(int argc, char **argv)
+static inline int check_args (int argc, char **argv)
 {
     /*
      * Sanity check. POSIX requires the invoking process to pass a non-NULL argv[0]. 
@@ -50,10 +50,11 @@ static inline int check_args(int argc, char **argv)
         (argc != 3) ? E_INSUFFICIENT_ARGS : E_SUCCESS;
 }
 
-static int check_input(char **restrict argv, int *chapter, int *restrict verse)
+static int check_input (char **restrict argv, int *chapter,
+                        int *restrict verse)
 {
-    int const ret_1 = strtoi(chapter, argv[1], 10);
-    int const ret_2 = strtoi(verse, argv[2], 10);
+    int const ret_1 = strtoi (chapter, argv[1], 10);
+    int const ret_2 = strtoi (verse, argv[2], 10);
 
     /* *INDENT-OFF* */
     return (ret_1 == STRTOI_INCONVERTIBLE || ret_2 == STRTOI_INCONVERTIBLE) ? E_PARSE_ERROR :
@@ -65,71 +66,71 @@ static int check_input(char **restrict argv, int *chapter, int *restrict verse)
     /* *INDENT-ON* */
 }
 
-static int handle_args(int chapter, int verse)
+static int handle_args (int chapter, int verse)
 {
     char *url = NULL;
-    int rc = build_url(&url, BASE_URL, strlen(BASE_URL), chapter, verse);
+    int rc = build_url (&url, BASE_URL, strlen(BASE_URL), chapter, verse);
 
     if (rc != E_SUCCESS) {
         return rc;
     }
 
-    struct mem_chunk chunk = INIT_MEM_CHUNK(0, 0);
-    CURL *const curl = curl_easy_init();
+    struct mem_chunk chunk = INIT_MEM_CHUNK (0, 0);
+    CURL *const curl = curl_easy_init ();
 
     if (!curl) {
         return E_CURL_INIT_FAILED;
     }
 
-    rc = download_webpage(&chunk, curl, url);
-    free(url);
+    rc = download_webpage (&chunk, curl, url);
+    free (url);
 
     if (rc != CURLE_OK) {
-        curl_easy_cleanup(curl);
-        free(chunk.ptr);
+        curl_easy_cleanup (curl);
+        free (chunk.ptr);
         return E_CURL_PERFORM_FAILED;
     } else {
         char *result = NULL;
 
-        rc = parse_response_json(chunk.ptr, &result);
-
+        rc = parse_response_json (chunk.ptr, &result);
+ 
         if (rc != E_SUCCESS) {
-            curl_easy_cleanup(curl);
-            free(chunk.ptr);
+            curl_easy_cleanup (curl);
+            free (chunk.ptr);
             return rc;
         } else {
             printf("(%d:%d) %s\n", chapter, verse, result);
         }
-        free(result);
+        free (result);
     }
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
-    free(chunk.ptr);
+    curl_easy_cleanup (curl);
+    curl_global_cleanup ();
+    free (chunk.ptr);
     return E_SUCCESS;
 }
 
 #ifndef UNIT_TESTING
-int main(int argc, char **argv)
+int main (int argc, char **argv)
 {
-    int status = check_args(argc, argv);
+    int status = check_args (argc, argv);
 
     if (status != E_SUCCESS) {
-        fputs(get_err_msg(status), stderr);
+        fputs (get_err_msg (status), stderr);
         return EXIT_FAILURE;
     }
 
     int chapter, verse;
 
-    status = check_input(argv, &chapter, &verse);
+    status = check_input (argv, &chapter, &verse);
 
     if (status != E_SUCCESS) {
-        fputs(get_err_msg(status), stderr);
+        fputs (get_err_msg (status), stderr);
         return EXIT_FAILURE;
     }
 
-    status = handle_args(chapter, verse);
+    status = handle_args (chapter, verse);
     if (status != E_SUCCESS) {
-        fputs(get_err_msg(status), stderr);
+        fputs (get_err_msg (status), stderr);
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

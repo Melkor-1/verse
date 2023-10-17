@@ -6,17 +6,18 @@
 #include <limits.h>
 #include <ctype.h>
 
-strtoi_errno strtoi(int *restrict out, const char *restrict nptr, int base)
+strtoi_errno strtoi (int *restrict out, const char *restrict nptr, 
+                     int base)
 {
     /*
      * Null string, empty string, leading whitespace? 
      */
-    if (!nptr || !nptr[0] || isspace(nptr[0])) {
+    if (!nptr || !nptr[0] || isspace (nptr[0])) {
         return STRTOI_INCONVERTIBLE;
     }
     char *end_ptr;
     const int errno_original = errno;   /* We shall restore errno to its original value before returning. */
-    const long int i = strtol(nptr, &end_ptr, base);
+    const long int i = strtol (nptr, &end_ptr, base);
 
     errno = 0;
 

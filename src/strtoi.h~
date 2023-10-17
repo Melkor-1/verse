@@ -1,5 +1,5 @@
 #ifndef STRTOI_H
-#    define STRTOI_H
+#define STRTOI_H
 
 typedef enum {
     STRTOI_SUCCESS,
@@ -23,6 +23,7 @@ typedef enum {
 *
 *	@return		Indicates if the operation succeeded, or why it failed. 
 */
-strtoi_errno strtoi(int *restrict out, const char *restrict nptr, int base);
+strtoi_errno strtoi (int *restrict out, const char *restrict nptr, 
+                     int base);
 
-#endif                          /* STRTOI_H */
+#endif   /* STRTOI_H */
