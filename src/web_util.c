@@ -80,18 +80,3 @@ download_webpage(const struct mem_chunk *restrict chunk,
     return (int) curl_easy_perform(curl);
 }
 
-int build_url(char **restrict url, const char *base_url, size_t base_url_size,
-              int chapter, int verse)
-{
-    /*
-     * Allocate space for the full url. 
-     */
-    *url = malloc(base_url_size * 2);
-
-    if (!(*url)) {
-        return E_ENOMEM;
-    }
-    snprintf(*url, base_url_size * 2,
-             "%s/%d:%d/en.maududi", base_url, chapter, verse);
-    return E_SUCCESS;
-}

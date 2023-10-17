@@ -47,19 +47,4 @@ size_t write_memory_callback (void *content, size_t size,
 int download_webpage (const struct mem_chunk *restrict chunk,
                       CURL * restrict curl, const char *restrict url);
 
-
-/**
-*   @brief      build_url() shall build a complete URL using the base URL, chapter, and verse information.
-*
-*   @param      url             - A pointer to a string that will hold the complete URL.
-*   @param      chapter         - The chapter number of the desired verse.
-*   @param      base_url        - The base URL to which to which chapter and verse information will be appended. 
-*   @param      base_url_size   - The size of the base URL. 
-*   @param      verse           - The verse number within the given chapter.
-*
-*   @return     An error code indicating the success or failure of building the URL.
-*               If successful, the complete URL will be stored in the 'url' parameter.
-*/
-int build_url (char **restrict url, const char *restrict base_url, size_t base_url_size, int chapter, int verse);
-
 #endif   /* WEB_UTIL_H */

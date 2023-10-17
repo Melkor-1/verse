@@ -17,7 +17,8 @@
 #include "web_util.h"
 #include "errors.h"
 
-#define BASE_URL        "http://api.alquran.cloud/v1/ayah/"
+#define BASE_URL        "http://api.alquran.cloud/v1/ayah/%d:%d/en.maududi"
+#define MAX_URL_SIZE    128
 
 #define MAX_CHAPTER		114
 #define MIN_CHAPTER		0
@@ -67,12 +68,9 @@ static int check_input(char **restrict argv, int *chapter, int *restrict verse)
 
 static int handle_args(int chapter, int verse)
 {
-    char *url = NULL;
-    int rc = build_url(&url, BASE_URL, strlen(BASE_URL), chapter, verse);
+    char url[MAX_URL_SIZE];
 
-    if (rc != E_SUCCESS) {
-        return rc;
-    }
+    snprintf(url, sizeof(url), BASE_URL, chapter, verse); 
 
     struct mem_chunk chunk = INIT_MEM_CHUNK(0, 0);
     CURL *const curl = curl_easy_init();
@@ -81,8 +79,7 @@ static int handle_args(int chapter, int verse)
         return E_CURL_INIT_FAILED;
     }
 
-    rc = download_webpage(&chunk, curl, url);
-    free(url);
+    int rc = download_webpage(&chunk, curl, url);
 
     if (rc != CURLE_OK) {
         curl_easy_cleanup(curl);
