@@ -1,9 +1,9 @@
 #ifdef _POSIX_C_SOURCE
-#    undef _POSIX_C_SOURCE
+#undef _POSIX_C_SOURCE
 #endif
 
 #ifdef _XOPEN_SOURCE
-#    undef _XOPEN_SOURCE
+#undef _XOPEN_SOURCE
 #endif
 
 #define _POSIX_C_SOURCE 200819L
@@ -42,7 +42,7 @@ static const int verse_limits[] = {
     8, 8, 19, 5, 8, 8, 11, 11, 8, 3, 9, 5, 4, 7, 3, 6, 3, 5, 4, 5, 6
 };
 
-static inline int check_args(int argc, char **argv)
+static inline int check_args(int argc, const char *const *argv)
 {
     /*
      * Sanity check. POSIX requires the invoking process to pass a non-NULL argv[0]. 
@@ -51,10 +51,11 @@ static inline int check_args(int argc, char **argv)
         (argc != 3) ? E_INSUFFICIENT_ARGS : E_SUCCESS;
 }
 
-static int check_input(char **restrict argv, int *chapter, int *restrict verse)
+static int check_input(const char *const *restrict argv, int *chapter,
+                       int *restrict verse)
 {
-    int const ret_1 = strtoi(chapter, argv[1], 10);
-    int const ret_2 = strtoi(verse, argv[2], 10);
+    const int ret_1 = strtoi(chapter, argv[1], 10);
+    const int ret_2 = strtoi(verse, argv[2], 10);
 
     /* *INDENT-OFF* */
     return (ret_1 == STRTOI_INCONVERTIBLE || ret_2 == STRTOI_INCONVERTIBLE) ? E_PARSE_ERROR :
@@ -70,7 +71,7 @@ static int handle_args(int chapter, int verse)
 {
     char url[MAX_URL_SIZE];
 
-    snprintf(url, sizeof(url), BASE_URL, chapter, verse); 
+    snprintf(url, sizeof (url), BASE_URL, chapter, verse);
 
     struct mem_chunk chunk = INIT_MEM_CHUNK(0, 0);
     CURL *const curl = curl_easy_init();
@@ -105,7 +106,6 @@ static int handle_args(int chapter, int verse)
     return E_SUCCESS;
 }
 
-#ifndef UNIT_TESTING
 int main(int argc, char **argv)
 {
     int status = check_args(argc, argv);
@@ -131,4 +131,3 @@ int main(int argc, char **argv)
     }
     return EXIT_SUCCESS;
 }
-#endif

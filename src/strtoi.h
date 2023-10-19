@@ -1,5 +1,5 @@
 #ifndef STRTOI_H
-#    define STRTOI_H
+#define STRTOI_H
 
 typedef enum {
     STRTOI_SUCCESS,

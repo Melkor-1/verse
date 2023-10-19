@@ -1,5 +1,5 @@
 #ifndef _XOPEN_SOURCE
-#    define _XOPEN_SOURCE 700
+#define _XOPEN_SOURCE 700
 #endif
 
 #include "web_util.h"
@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
 #include <jansson.h>
 
 #define MAX_VERSE_SIZE 4096
@@ -16,7 +17,7 @@
 int parse_response_json(const char *restrict json_response, char **restrict out)
 {
     json_error_t error;
-    json_t *root = json_loads(json_response, 0, &error);
+    json_t *const root = json_loads(json_response, 0, &error);
 
     if (root) {
         /*
@@ -64,19 +65,16 @@ download_webpage(const struct mem_chunk *restrict chunk,
 {
     CURLcode ret;
 
+    /* *INDENT-OFF* */
     if ((ret = curl_easy_setopt(curl, CURLOPT_URL, url)) != CURLE_OK
-        || (ret =
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
-                             write_memory_callback)) != CURLE_OK
+        || (ret = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_memory_callback)) != CURLE_OK
         || (ret = curl_easy_setopt(curl, CURLOPT_WRITEDATA, chunk)) != CURLE_OK
-        || (ret =
-            curl_easy_setopt(curl, CURLOPT_USERAGENT, "Verse/1.0")) != CURLE_OK
-        || (ret =
-            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L)) != CURLE_OK
+        || (ret = curl_easy_setopt(curl, CURLOPT_USERAGENT, "Verse/1.0")) != CURLE_OK
+        || (ret = curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L)) != CURLE_OK
         || (ret = curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 5L)) != CURLE_OK) {
         return (int) ret;
     }
+    /* *INDENT-ON* */
 
     return (int) curl_easy_perform(curl);
 }
-

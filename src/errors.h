@@ -1,9 +1,9 @@
 #ifndef ERRORS_H
-#    define ERRORS_H
+#define ERRORS_H
 
-#    include <stddef.h>
+#include <stddef.h>
 
-#    define ARRAY_CARDINALITY(x) (sizeof (x) / sizeof ((x)[0]))
+#define ARRAY_CARDINALITY(x) (sizeof (x) / sizeof ((x)[0]))
 
 /*
  *	Error codes for invalid arguments.
