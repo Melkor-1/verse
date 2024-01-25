@@ -51,7 +51,7 @@ static inline int check_args(int argc, const char *const *argv)
         (argc != 3) ? E_INSUFFICIENT_ARGS : E_SUCCESS;
 }
 
-static int check_input(const char *const *restrict argv, int *chapter,
+static int check_input(const char *const *restrict argv, int *restrict chapter,
                        int *restrict verse)
 {
     const int ret_1 = strtoi(chapter, argv[1], 10);
@@ -108,7 +108,8 @@ static int handle_args(int chapter, int verse)
 
 int main(int argc, char **argv)
 {
-    int status = check_args(argc, argv);
+    const char *const *args = (const char *const *)argv;
+    int status = check_args(argc, args);
 
     if (status != E_SUCCESS) {
         fputs(get_err_msg(status), stderr);
@@ -117,7 +118,7 @@ int main(int argc, char **argv)
 
     int chapter, verse;
 
-    status = check_input(argv, &chapter, &verse);
+    status = check_input(args, &chapter, &verse);
 
     if (status != E_SUCCESS) {
         fputs(get_err_msg(status), stderr);

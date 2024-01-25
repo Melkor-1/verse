@@ -20,19 +20,22 @@ CFLAGS 	+= -D_FORTIFY_SOURCE=2
 BINDIR	:= bin
 BIN 	:= $(BINDIR)/verse
 SRCS 	:= $(wildcard src/*.c)
-OBJS 	:= $(patsubst src/%.c, obj/%.o, $(SRCS))
+OBJDIR  := obj
+OBJS 	:= $(patsubst src/%.c, $(OBJDIR)/%.o, $(SRCS))
 LDLIBS 	:= -ljansson -lcurl
 
 all: $(BIN)
 
-$(BIN): $(OBJS)
+$(BIN): $(OBJS) 
+	mkdir -p $(dir $@)
 	$(CC) -o $@ $^ $(CFLAGS) $(LDLIBS)
 
-obj/%.o: src/%.c
+$(OBJDIR)/%.o: src/%.c 
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@ $(LDLIBS)
 
 clean:
-	$(RM) -rf $(OBJS) 
+	$(RM) -rf $(OBJDIR) 
 
 fclean:
 	$(RM) -rf $(BIN) 
