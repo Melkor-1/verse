@@ -4,7 +4,7 @@
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/29706/badge.svg"/>
 </a>
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)]
 
 Verse is a command-line program that allows you to retrieve specific verses from the Quran. It takes a chapter and verse number as input and provides you with the corresponding Quranic verse.
 
