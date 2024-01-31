@@ -1,11 +1,7 @@
 # Verse Program
 
-<a href="https://scan.coverity.com/projects/melkor-1-verse"> 
-    <img alt="Coverity Scan Build Status" src="https://scan.coverity.com/projects/29706/badge.svg"/>
-</a>
-
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/29706/badge.svg)](https://scan.coverity.com/projects/melkor-1-verse)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)]
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://https://github.com/Melkor-1/verse/edit/main/LICENSE)
 
 Verse is a command-line program that allows you to retrieve specific verses from the Quran. It takes a chapter and verse number as input and provides you with the corresponding Quranic verse.
 
@@ -57,9 +53,3 @@ For example, to retrieve chapter 2, verse 255:
 ## Contributing
 
 If you'd like to contribute to the Verse Finder program, feel free to fork the repository, make your changes, and submit a pull request. Bug fixes, improvements, and new features are always welcome!
-
-
-## License
-This program is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-
