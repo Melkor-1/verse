@@ -13,26 +13,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "strtoi.h"
+#include "str2i.h"
 #include "web_util.h"
 #include "errors.h"
 
-#define BASE_URL        "http://api.alquran.cloud/v1/ayah/%d:%d/en.maududi"
-#define MAX_URL_SIZE    128
-
 #define MAX_CHAPTER		114
 #define MIN_CHAPTER		0
-#define MAX_VERSE		6236
 #define MIN_VERSE		0
-
-#define INIT_MEM_CHUNK(address, size) \
-	{ .ptr = address, .len = size }
 
 /*
  * Each entry in the table is the maximum number of verses present in its 
  * corresponding index, which denotes the chapter number. 
  */
-static const int verse_limits[] = {
+static const int verse_counts[] = {
     7, 286, 200, 176, 120, 165, 206, 75, 129, 109, 123, 111, 43, 52,
     99, 128, 111, 110, 98, 135, 112, 78, 118, 64, 77, 227, 93, 88, 69,
     60, 34, 30, 73, 54, 45, 83, 182, 88, 75, 85, 54, 53, 89, 59, 37,
@@ -54,56 +47,17 @@ static inline int check_args(int argc, const char *const *argv)
 static int check_input(const char *const *restrict argv, int *restrict chapter,
                        int *restrict verse)
 {
-    const int ret_1 = strtoi(chapter, argv[1], 10);
-    const int ret_2 = strtoi(verse, argv[2], 10);
-
+    const int ret_1 = str2i(chapter, argv[1], 10);
+    const int ret_2 = str2i(verse, argv[2], 10);
+    
     /* *INDENT-OFF* */
-    return (ret_1 == STRTOI_INCONVERTIBLE || ret_2 == STRTOI_INCONVERTIBLE) ? E_PARSE_ERROR :
-           (ret_1 == STRTOI_UNDERFLOW || ret_2 == STRTOI_UNDERFLOW ||
-            ret_1 == STRTOI_OVERFLOW || ret_2 == STRTOI_OVERFLOW) ? E_INVALID_RANGE :
+    return (ret_1 == STR2I_INCONVERTIBLE || ret_2 == STR2I_INCONVERTIBLE) ? E_PARSE_ERROR :
+           (ret_1 == STR2I_UNDERFLOW || ret_2 == STR2I_UNDERFLOW ||
+            ret_1 == STR2I_OVERFLOW || ret_2 == STR2I_OVERFLOW) ? E_INVALID_RANGE :
            (*chapter <= MIN_CHAPTER || *chapter > MAX_CHAPTER) ? E_INVALID_CHAPTER :
-           (*verse <= MIN_VERSE || *verse > verse_limits [*chapter - 1]) ? E_INVALID_VERSE :
+           (*verse <= MIN_VERSE || *verse > verse_counts [*chapter - 1]) ? E_INVALID_VERSE :
            E_SUCCESS;
     /* *INDENT-ON* */
-}
-
-static int handle_args(int chapter, int verse)
-{
-    char url[MAX_URL_SIZE];
-
-    snprintf(url, sizeof (url), BASE_URL, chapter, verse);
-
-    struct mem_chunk chunk = INIT_MEM_CHUNK(0, 0);
-    CURL *const curl = curl_easy_init();
-
-    if (!curl) {
-        return E_CURL_INIT_FAILED;
-    }
-
-    int rc = download_webpage(&chunk, curl, url);
-
-    if (rc != CURLE_OK) {
-        curl_easy_cleanup(curl);
-        free(chunk.ptr);
-        return E_CURL_PERFORM_FAILED;
-    } else {
-        char *result = NULL;
-
-        rc = parse_response_json(chunk.ptr, &result);
-
-        if (rc != E_SUCCESS) {
-            curl_easy_cleanup(curl);
-            free(chunk.ptr);
-            return rc;
-        } else {
-            printf("(%d:%d) %s\n", chapter, verse, result);
-        }
-        free(result);
-    }
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
-    free(chunk.ptr);
-    return E_SUCCESS;
 }
 
 int main(int argc, char **argv)
